@@ -1,9 +1,15 @@
 using System;
+using AMA.Common.Interfaces;
+using AMA.Persistence.Contexts;
+using AMA.Persistence.Models;
 using AMA.Users;
+using AMA.Users.Domain.Repositories;
+using AutoMapper;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,10 +37,19 @@ namespace AMA.WebApi
 
             services.AddMediatR(userApplicationAssembly);
 
+            services.AddAutoMapper(userApplicationAssembly);
+
             services.AddMvc()
                 .AddFluentValidation(
                     x => x.RegisterValidatorsFromAssemblyContaining(userApplicationAssemblyType)
                 );
+
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseMySQL(Configuration.GetConnectionString("MySqlConnectionString")));
+
+            services.AddRouting(options => options.LowercaseUrls = true);
+
+            services.AddTransient<IRepository<UserModel>, UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
