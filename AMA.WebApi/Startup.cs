@@ -1,4 +1,5 @@
 using System;
+using AMA.Common.Filters;
 using AMA.Common.Interfaces;
 using AMA.Persistence.Contexts;
 using AMA.Persistence.Models;
@@ -39,10 +40,13 @@ namespace AMA.WebApi
 
             services.AddAutoMapper(userApplicationAssembly);
 
-            services.AddMvc()
-                .AddFluentValidation(
-                    x => x.RegisterValidatorsFromAssemblyContaining(userApplicationAssemblyType)
-                );
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(ValidateRequestFilter));
+            })
+            .AddFluentValidation(
+                x => x.RegisterValidatorsFromAssembly(userApplicationAssembly)
+            );
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySQL(Configuration.GetConnectionString("MySqlConnectionString")));
