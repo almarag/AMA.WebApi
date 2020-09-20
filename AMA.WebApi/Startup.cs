@@ -35,12 +35,9 @@ namespace AMA.WebApi
             AddSwagger(services);
 
             var userApplicationAssembly = new UsersAssemblyApplication().GetAssembly();
-            var userApplicationAssemblyType = userApplicationAssembly.GetType();
 
             services.AddMediatR(userApplicationAssembly);
-
             services.AddAutoMapper(userApplicationAssembly);
-
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(ValidateRequestFilter));
@@ -51,9 +48,7 @@ namespace AMA.WebApi
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseMySQL(Configuration.GetConnectionString("MySqlConnectionString")));
-
             services.AddRouting(options => options.LowercaseUrls = true);
-
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IPersonRepository, PersonRepository>();
         }
