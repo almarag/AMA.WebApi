@@ -1,23 +1,24 @@
-using System;
-using AMA.Common.Filters;
-using AMA.Common.Interfaces;
-using AMA.Persistence.Contexts;
-using AMA.Persistence.Models;
-using AMA.Users;
-using AMA.Users.Domain.Repositories;
-using AutoMapper;
-using FluentValidation.AspNetCore;
-using MediatR;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-
 namespace AMA.WebApi
 {
+    using System;
+    using AMA.Common.Filters;
+    using AMA.Common.Interfaces;
+    using AMA.Persistence.Contexts;
+    using AMA.Persistence.Models;
+    using AMA.Users;
+    using AMA.Users.Domain.Interfaces;
+    using AMA.Users.Domain.Repositories;
+    using AutoMapper;
+    using FluentValidation.AspNetCore;
+    using MediatR;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.EntityFrameworkCore;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.OpenApi.Models;
+
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -53,7 +54,8 @@ namespace AMA.WebApi
 
             services.AddRouting(options => options.LowercaseUrls = true);
 
-            services.AddTransient<IRepository<UserModel>, UserRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IPersonRepository, PersonRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
